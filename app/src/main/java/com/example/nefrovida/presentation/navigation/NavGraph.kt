@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.nefrovida.presentation.screens.agenda.AgendaScreen
+import com.example.nefrovida.presentation.screens.forum.ForumScreen
 import com.example.nefrovida.presentation.screens.home.HomeScreen
 import com.example.nefrovida.presentation.screens.laboratory.LaboratoryScreen
 
@@ -12,6 +13,7 @@ sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Laboratory : Screen("labs")
     object Agenda : Screen("agenda")
+    object Forum : Screen ("forum")
 }
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -29,6 +31,11 @@ fun NefrovidaNavGraph(
         }
         composable( route = Screen.Laboratory.route) {
             LaboratoryScreen(
+                navController = navController,
+                onBackClick = { navController.popBackStack() })
+        }
+        composable( route = Screen.Forum.route) {
+            ForumScreen(
                 navController = navController,
                 onBackClick = { navController.popBackStack() })
         }
