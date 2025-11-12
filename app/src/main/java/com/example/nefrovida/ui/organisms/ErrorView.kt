@@ -1,4 +1,4 @@
-package com.example.nefrovida.ui.organism
+package com.example.nefrovida.ui.organisms
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
