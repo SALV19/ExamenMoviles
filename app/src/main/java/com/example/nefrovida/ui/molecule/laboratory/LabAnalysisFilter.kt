@@ -46,19 +46,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.nefrovida.domain.model.Analysis
 import com.example.nefrovida.ui.atoms.Subtitle
-import kotlinx.coroutines.launch
 import java.time.LocalDate
-
-data class AnalysisInfo(
-    val analysis_id: Int,
-    val name: String
-)
 
 @OptIn(ExperimentalLayoutApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LabAnalysisFilter(
+    analysisList: List<Analysis>,
     modifier: Modifier = Modifier,
     onChange: (
         startDate: LocalDate?,
@@ -66,26 +62,16 @@ fun LabAnalysisFilter(
         selectedAnalysis: List<Int>,
         status: FilterStatus
     ) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    loadAnalysis: () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
-    var analysisList by remember { mutableStateOf(listOf<AnalysisInfo>()) }
-
     var startDate by remember { mutableStateOf<LocalDate?>(null) }
     var endDate by remember { mutableStateOf<LocalDate?>(null) }
     var selectedAnalysis by remember { mutableStateOf(setOf<Int>()) }
     var status by remember { mutableStateOf(FilterStatus()) }
 
     LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            analysisList = listOf(
-                AnalysisInfo(1, "Hemograma"),
-                AnalysisInfo(2, "Glucosa"),
-                AnalysisInfo(3, "Colesterol"),
-                AnalysisInfo(4, "Triglicéridos")
-            )
-        }
+        loadAnalysis()
     }
 
     Card(
@@ -182,11 +168,11 @@ fun LabAnalysisFilter(
                         modifier = Modifier.padding(vertical = 2.dp)
                     ) {
                         Checkbox(
-                            checked = selectedAnalysis.contains(a.analysis_id),
+                            checked = selectedAnalysis.contains(a.analysisId),
                             onCheckedChange = { checked ->
                                 selectedAnalysis =
-                                    if (checked) selectedAnalysis + a.analysis_id
-                                    else selectedAnalysis - a.analysis_id
+                                    if (checked) selectedAnalysis + a.analysisId
+                                    else selectedAnalysis - a.analysisId
                             }
                         )
                         Text(a.name)

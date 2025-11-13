@@ -3,7 +3,7 @@ package com.example.nefrovida.data.remote.dto
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-enum class AnalysisTypes {
+enum class AnalysisStatus {
     SENT,
     PENDING,
     LAB,
@@ -11,10 +11,10 @@ enum class AnalysisTypes {
 }
 
 data class LabAnalysisDto(
-    @SerializedName("patient_analysis_id") val patient_analysis_id: Int,
-    @SerializedName("analysis_date") val analysis_date: Date,
-    @SerializedName("results_date") val results_date: Date,
-    @SerializedName("analysis_status") val analysis_status: AnalysisTypes,
+    @SerializedName("patient_analysis_id") val patientAnalysisId: Int,
+    @SerializedName("analysis_date") val analysisDate: Date,
+    @SerializedName("results_date") val resultsDate: Date,
+    @SerializedName("analysis_status") val analysisStatus: AnalysisStatus,
     @SerializedName("patient") val patient: PatientDto
 ) {
     data class PatientDto(
@@ -23,7 +23,7 @@ data class LabAnalysisDto(
 
     data class UserDto(
         @SerializedName("name") val name: String,
-        @SerializedName("parent_last_name") val parent_last_name: String,
-        @SerializedName("maternal_last_name") val maternal_last_name: String
+        @SerializedName("parent_last_name") val parentLastName: String,
+        @SerializedName("maternal_last_name") val maternalLastName: String
     )
 }

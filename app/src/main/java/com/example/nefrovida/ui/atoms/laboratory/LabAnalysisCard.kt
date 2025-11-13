@@ -70,13 +70,15 @@ fun Status(value: String) {
 fun LabAnalysisCard(
     labAnalysis: LabAnalysis,
 ) {
-    val name = labAnalysis.name + " " + labAnalysis.parent_last_name + " " + labAnalysis.maternal_last_name
+    val name = labAnalysis.name + " " + labAnalysis.parentLastName + " " + labAnalysis.maternalLastName
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
+            .background(Color.White)
             .padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Row(
@@ -107,10 +109,10 @@ fun LabAnalysisCard(
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center,
                     )
-                    Text(formatDate(labAnalysis.analysis_date))
+                    Text(formatDate(labAnalysis.analysisDate))
                 }
             }
-            Status(labAnalysis.analysis_status.toString())
+            Status(labAnalysis.analysisStatus.toString())
         }
     }
 }

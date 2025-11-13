@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,7 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.nefrovida.domain.model.Analysis
 import com.example.nefrovida.domain.model.LabAnalysis
+import com.example.nefrovida.presentation.screens.labanalysis.AnalysisUIState
 import com.example.nefrovida.ui.atoms.ClickableIcon
 import com.example.nefrovida.ui.atoms.Pill
 import com.example.nefrovida.ui.atoms.Title
@@ -48,12 +52,14 @@ import java.time.LocalDate
 @Composable
 fun LabAnalysisListContent(
     labAnalysisList: List<LabAnalysis>,
-    loadMoreItems: (Int) -> Unit,
     isLoading: Boolean,
-    hasMore: Boolean
+    hasMore: Boolean,
+    analysisList: List<Analysis>,
+    loadMoreItems: (Int) -> Unit,
+    loadAnalysis: () -> Unit
 ) {
     val scrollState = rememberLazyListState()
-    var page by remember { mutableStateOf(1) }
+    var page by remember { mutableIntStateOf(1) }
     var showFilter by rememberSaveable { mutableStateOf(false) }
 
     val shouldLoadMore = remember {
@@ -73,42 +79,56 @@ fun LabAnalysisListContent(
     Column(
         modifier = Modifier.padding(top = 10.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Title("Resultados de laboratorio")
-            ClickableIcon(
-                onClick = {},
-                icon = Icons.Outlined.Search
-            )
-            ClickableIcon(
-                onClick = { showFilter = true },
-                icon = Icons.Outlined.FilterAlt
-            )
-        }
-
-        LazyColumn(
-            contentPadding = PaddingValues(top = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            state = scrollState
-        ) {
-            itemsIndexed(labAnalysisList) { idx, labAnalysis ->
-                LabAnalysisCard(labAnalysis)
+        when (isLoading && labAnalysisList.isEmpty()) {
+            true -> {
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
             }
+            else -> {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    Title("Resultados de laboratorio")
+                    ClickableIcon(
+                        onClick = {},
+                        icon = Icons.Outlined.Search
+                    )
+                    ClickableIcon(
+                        onClick = { showFilter = true },
+                        icon = Icons.Outlined.FilterAlt
+                    )
+                }
 
-            if (isLoading && !hasMore) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                LazyColumn(
+                    contentPadding = PaddingValues(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    state = scrollState
+                ) {
+                    itemsIndexed(labAnalysisList) { idx, labAnalysis ->
+                        LabAnalysisCard(labAnalysis)
+                    }
+
+                    if (isLoading && !hasMore) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
                     }
                 }
             }
@@ -122,10 +142,12 @@ fun LabAnalysisListContent(
         onClickOutside = { showFilter = false }
     ) {
         LabAnalysisFilter(
+            analysisList = analysisList,
             onChange = { start, end, list, status ->
                 {}
             },
-            onClose = { showFilter = false }
+            onClose = { showFilter = false },
+            loadAnalysis = loadAnalysis
         )
     }
 
