@@ -24,28 +24,19 @@ fun LabAnalysisScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {Text("Laboratory Analysis")}
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-        ) {
-            LabAnalysisListContainer(
-                labAnalysisList = uiState.labAnalysisList,
-                isLoading = uiState.isLoading,
-                error = uiState.error,
-                onRetry = { viewModel.loadLabAnalysisList() },
-                loadMoreItems = { page ->
-                    viewModel.loadLabAnalysisList(page)
-                }
-            )
-        }
-
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        LabAnalysisListContainer(
+            labAnalysisList = uiState.labAnalysisList,
+            isLoading = uiState.isLoading,
+            hasMore = uiState.hasMore,
+            error = uiState.error,
+            onRetry = { viewModel.loadLabAnalysisList() },
+            loadMoreItems = { page ->
+                viewModel.loadLabAnalysisList(page)
+            }
+        )
     }
 }

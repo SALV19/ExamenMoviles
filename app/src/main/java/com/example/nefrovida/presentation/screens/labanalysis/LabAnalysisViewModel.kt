@@ -32,9 +32,18 @@ class LabAnalysisViewModel @Inject constructor(
                             isLoading = true
                         )
                         is Result.Success -> state.copy(
-                            labAnalysisList = result.data,
+                            labAnalysisList = if (page == 0) {
+                              result.data
+                            } else {
+                                state.labAnalysisList + result.data
+                            },
                             isLoading = false,
-                            error = null
+                            hasMore = if (result.data.size == 0) {
+                                false
+                            } else {
+                                state.hasMore
+                            },
+                            error = null,
                         )
                         is Result.Error -> state.copy(
                             error = result.exception.message,

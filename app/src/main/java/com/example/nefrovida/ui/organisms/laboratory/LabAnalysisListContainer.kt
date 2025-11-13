@@ -23,6 +23,7 @@ import com.example.nefrovida.ui.organisms.ErrorView
 fun LabAnalysisListContainer(
     labAnalysisList: List<LabAnalysis>,
     isLoading: Boolean,
+    hasMore: Boolean,
     error: String?,
     onRetry: () -> Unit,
     loadMoreItems: (Int) -> Unit
@@ -32,13 +33,7 @@ fun LabAnalysisListContainer(
             .fillMaxSize()
     ) {
         when {
-            isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
             error != null -> {
-
                 ErrorView(
                     message = error,
                     onRetry = onRetry,
@@ -48,7 +43,9 @@ fun LabAnalysisListContainer(
             else -> {
                 LabAnalysisListContent(
                     labAnalysisList = labAnalysisList,
-                    loadMoreItems = loadMoreItems
+                    loadMoreItems = loadMoreItems,
+                    isLoading = isLoading,
+                    hasMore = hasMore,
                 )
             }
         }
