@@ -204,7 +204,7 @@ fun LabAnalysisFilter(
                         onChange(
                             startDate,
                             endDate,
-                            selectedAnalysis.toList(),
+                            selectedAnalysis.toList().map(),
                             status
                         )
                         onClose()

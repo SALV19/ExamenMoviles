@@ -5,6 +5,8 @@ import com.example.nefrovida.data.remote.api.LaboratoryApi
 import com.example.nefrovida.domain.model.Analysis
 import com.example.nefrovida.domain.model.LabAnalysis
 import com.example.nefrovida.domain.repository.LabAnalysisRepository
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,13 +14,20 @@ import javax.inject.Singleton
 class LabAnalysisRepositoryImpl @Inject constructor(
     private val api: LaboratoryApi
 ) : LabAnalysisRepository {
-    override suspend fun getLabAnalysisList(page: Int): List<LabAnalysis> {
+    override suspend fun getLabAnalysisList(
+        page: Int,
+        name: String?,
+        start: String?,
+        end: String?,
+        analysis: List<String>?,
+        status: String?
+    ): List<LabAnalysis> {
         val response = api.getLabResults(
             page = page,
-            name = null,
-            start = null,
-            end = null,
-            analysis = null,
+            name = name,
+            start = start,
+            end = end,
+            analysis = analysis,
             status = null
         )
         return response.map { result ->

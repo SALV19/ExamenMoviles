@@ -1,6 +1,7 @@
 package com.example.nefrovida.ui.molecule.laboratory
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,6 +62,7 @@ fun LabAnalysisListContent(
     val scrollState = rememberLazyListState()
     var page by remember { mutableIntStateOf(1) }
     var showFilter by rememberSaveable { mutableStateOf(false) }
+    var showSearch by rememberSaveable { mutableStateOf(false) }
 
     val shouldLoadMore = remember {
         derivedStateOf {
@@ -100,7 +102,7 @@ fun LabAnalysisListContent(
                 ) {
                     Title("Resultados de laboratorio")
                     ClickableIcon(
-                        onClick = {},
+                        onClick = { showSearch = true },
                         icon = Icons.Outlined.Search
                     )
                     ClickableIcon(
@@ -144,7 +146,10 @@ fun LabAnalysisListContent(
         LabAnalysisFilter(
             analysisList = analysisList,
             onChange = { start, end, list, status ->
-                {}
+                Log.d("MyActivity", start.toString())
+                Log.d("MyActivity", end.toString())
+                Log.d("MyActivity", list.toString())
+                Log.d("MyActivity", status.toString())
             },
             onClose = { showFilter = false },
             loadAnalysis = loadAnalysis

@@ -4,6 +4,8 @@ import com.example.nefrovida.data.remote.dto.AnalysisDto
 import com.example.nefrovida.data.remote.dto.LabAnalysisDto
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface LaboratoryApi {
     @GET("laboratory/results")
