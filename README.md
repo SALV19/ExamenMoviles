@@ -1,3 +1,6 @@
+# Santiago Alducin Villaseñor - A01707122
+# Android
+
 # Utilizé de base una rama del repo del proyecto que tenía las bases necesarias de conexión y cosas por el estilo
 ## Por eso dice que Frida contribuyo
 
