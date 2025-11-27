@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
@@ -20,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.nefrovida.data.local.preferences.CovidPreferences
 import com.example.nefrovida.ui.organisms.CovidCaseItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +53,40 @@ fun HomeScreen(
     var expanded by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf("") }
 
+    // Date filter states
+    var dateExpanded by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf("") }
+
+    // Get available dates from the loaded data (last 20 only)
+    val availableDates = remember(uiState.casesList) {
+        uiState.casesList
+            .flatMap { it.cases.dailyCases.keys }
+            .distinct()
+            .sortedDescending()
+            .take(20)
+    }
+
+    // Filtered cases by date
+    val filteredCases = remember(uiState.casesList, selectedDate) {
+        if (selectedDate.isEmpty()) {
+            uiState.casesList
+        } else {
+            uiState.casesList.map { covidCase ->
+                val filteredDailyCases = covidCase.cases.dailyCases
+                    .filterKeys { it == selectedDate }
+
+                covidCase.copy(
+                    cases = covidCase.cases.copy(
+                        dailyCases = filteredDailyCases.ifEmpty {
+                            // If no data for selected date, show empty
+                            emptyMap()
+                        }
+                    )
+                )
+            }.filter { it.cases.dailyCases.isNotEmpty() }
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -60,7 +94,7 @@ fun HomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(220.dp)
+                .height(280.dp)
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
@@ -96,7 +130,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Search Card
+            // Filters Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -104,6 +138,7 @@ fun HomeScreen(
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
+                    // Country Filter
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -116,12 +151,20 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Select Country",
+                            text = "Filters",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.SemiBold
                             )
                         )
                     }
+
+                    // Country Dropdown
+                    Text(
+                        text = "Country",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
 
                     ExposedDropdownMenuBox(
                         expanded = expanded,
@@ -149,6 +192,26 @@ fun HomeScreen(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
+                            // Option to clear filter
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "All Countries",
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFF667eea)
+                                        )
+                                    )
+                                },
+                                onClick = {
+                                    selectedCountry = ""
+                                    expanded = false
+                                    viewModel.loadCovidCases("", null)
+                                }
+                            )
+
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
                             countries.forEach { country ->
                                 DropdownMenuItem(
                                     text = { Text(country) },
@@ -161,20 +224,159 @@ fun HomeScreen(
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Date Filter
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = null,
+                            tint = Color(0xFF764ba2),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Date",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Gray
+                        )
+                    }
+
+                    ExposedDropdownMenuBox(
+                        expanded = dateExpanded,
+                        onExpandedChange = { dateExpanded = !dateExpanded }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedDate.ifEmpty { "All Dates (Latest)" },
+                            onValueChange = {},
+                            readOnly = true,
+                            placeholder = { Text("Choose a date") },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = dateExpanded)
+                            },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF764ba2),
+                                unfocusedBorderColor = Color(0xFFE0E0E0)
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            enabled = availableDates.isNotEmpty(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = dateExpanded,
+                            onDismissRequest = { dateExpanded = false }
+                        ) {
+                            // Option to clear date filter
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "All Dates (Latest)",
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFF764ba2)
+                                        )
+                                    )
+                                },
+                                onClick = {
+                                    selectedDate = ""
+                                    dateExpanded = false
+                                }
+                            )
+
+                            if (availableDates.isNotEmpty()) {
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+                                availableDates.forEach { date ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(date)
+                                                if (date == availableDates.first()) {
+                                                    Text(
+                                                        "Latest",
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = Color(0xFF4CAF50)
+                                                    )
+                                                }
+                                            }
+                                        },
+                                        onClick = {
+                                            selectedDate = date
+                                            dateExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Clear filters button
+                    if (selectedCountry.isNotEmpty() || selectedDate.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        TextButton(
+                            onClick = {
+                                selectedCountry = ""
+                                selectedDate = ""
+                                viewModel.loadCovidCases("", null)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "Clear All Filters",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = Color(0xFF667eea)
+                            )
+                        }
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Stats Header
-            if (!uiState.isLoading && uiState.error == null && uiState.casesList.isNotEmpty()) {
-                Text(
-                    text = "Latest Statistics",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
+            if (!uiState.isLoading && uiState.error == null && filteredCases.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Latest Statistics",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+
+                    if (selectedDate.isNotEmpty()) {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFFF0F4FF)
+                            ),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(
+                                text = selectedDate,
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    color = Color(0xFF667eea),
+                                    fontWeight = FontWeight.SemiBold
+                                ),
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            )
+                        }
+                    }
+                }
             }
 
             // Loading State
@@ -246,12 +448,51 @@ fun HomeScreen(
                 }
             }
 
+            // No results message
+            if (!uiState.isLoading && uiState.error == null && filteredCases.isEmpty() && selectedDate.isNotEmpty()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFFFF9C4)
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "📅",
+                                style = MaterialTheme.typography.headlineMedium
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "No data for selected date",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.SemiBold
+                                ),
+                                color = Color(0xFFF57F17)
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Try selecting a different date",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFFF57F17)
+                            )
+                        }
+                    }
+                }
+            }
+
             // Cases List
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(uiState.casesList) { covidCase ->
+                items(filteredCases) { covidCase ->
                     CovidCaseItem(covidCase)
                 }
 
