@@ -1,9 +1,11 @@
-# Nefrovida Backend and web implementation
+# Utilizé de base una rama del repo del proyecto que tenía las bases necesarias de conexión y cosas por el estilo
+## Por eso dice que Frida contribuyo
+
+# Examen integrador
 
 ## Descripción
 
-Servidor y aplicación web para Nefrovida, solución para manejar información de pacientes, comunidad, y laboratorio.
-
+Examen integrador
 ## Tabla de Contenidos
 
 - [Instalación](#instalación)
