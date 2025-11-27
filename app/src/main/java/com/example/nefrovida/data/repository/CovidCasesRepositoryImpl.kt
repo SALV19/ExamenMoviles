@@ -13,7 +13,7 @@ class CovidCasesRepositoryImpl @Inject constructor(
 ): CovidCasesRepository {
     override suspend fun getCovidCasesList(country: String?, date: String?): List<CovidCase> {
         val response = api.getCases("canada")
-        return response.results.map { dto ->
+        return response.map { dto ->
             dto.toDomain()
         }
     }

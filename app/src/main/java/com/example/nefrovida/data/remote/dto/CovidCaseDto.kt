@@ -14,6 +14,6 @@ data class CovidCaseDto(
 )
 
 data class DailyCaseDto(
-    val total: Int,
+    @SerializedName("total") val total: Int,
     @SerializedName("new") val newCases: Int
 )

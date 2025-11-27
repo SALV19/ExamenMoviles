@@ -21,7 +21,7 @@ fun CovidCaseItem(case: CovidCase) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "Country: ${case.country}", style = MaterialTheme.typography.titleMedium)
             Text(text = "Region: ${case.region}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Days reported: ${case.cases.dailyCases.size}")
+            Text(text = "Cases: ${case.cases.dailyCases.entries.last().value.total}")
         }
     }
 }

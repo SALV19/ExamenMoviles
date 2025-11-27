@@ -7,10 +7,6 @@ import com.example.nefrovida.domain.model.Cases
 import com.example.nefrovida.domain.model.CovidCase
 import com.example.nefrovida.domain.model.DailyCase
 
-fun CovidCaseListDto.toDomain(): List<CovidCase> {
-    return results.map { it.toDomain() }
-}
-
 fun CovidCaseDto.toDomain(): CovidCase {
     return CovidCase(
         country = country,

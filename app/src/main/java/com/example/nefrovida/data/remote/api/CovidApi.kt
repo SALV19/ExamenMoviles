@@ -1,6 +1,6 @@
 package com.example.nefrovida.data.remote.api
 
-import com.example.nefrovida.data.remote.dto.CovidCaseListDto
+import com.example.nefrovida.data.remote.dto.CovidCaseDto
 import retrofit2.http.Query
 import retrofit2.http.GET
 
@@ -9,6 +9,6 @@ interface CovidApi {
     suspend fun getCases(
         @Query("country") country: String,
 //        @Query("date") date: String?
-    ): CovidCaseListDto
+    ): List<CovidCaseDto>
 
 }
