@@ -1,6 +1,5 @@
 package com.example.nefrovida.data.mapper
 
-import com.example.nefrovida.data.remote.dto.CasesDto
 import com.example.nefrovida.data.remote.dto.CovidCaseDto
 import com.example.nefrovida.data.remote.dto.CovidCaseListDto
 import com.example.nefrovida.data.remote.dto.DailyCaseDto
@@ -16,15 +15,7 @@ fun CovidCaseDto.toDomain(): CovidCase {
     return CovidCase(
         country = country,
         region = region,
-        cases = cases.toDomain()
-    )
-}
-
-fun CasesDto.toDomain(): Cases {
-    return Cases(
-        dailyCases = dailyCases.mapValues { (_, dto) ->
-            dto.toDomain()
-        }
+        cases = Cases(cases.mapValues { it.value.toDomain() })
     )
 }
 

@@ -1,13 +1,14 @@
 package com.example.nefrovida.data.remote.api
 
-import com.example.nefrovida.data.remote.dto.CovidCaseDto
+import com.example.nefrovida.data.remote.dto.CovidCaseListDto
 import retrofit2.http.Query
 import retrofit2.http.GET
 
 interface CovidApi {
-    @GET("/")
+    @GET("covid19")
     suspend fun getCases(
-        @Query("country") country: String = "canada",
-        @Query("date") date: String?
-    ): CovidCaseDto
+        @Query("country") country: String,
+//        @Query("date") date: String?
+    ): CovidCaseListDto
+
 }

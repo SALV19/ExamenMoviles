@@ -1,7 +1,10 @@
 package com.example.nefrovida.data.di
 
+import com.example.nefrovida.data.remote.api.CovidApi
 import com.example.nefrovida.data.remote.api.LaboratoryApi
+import com.example.nefrovida.data.repository.CovidCasesRepositoryImpl
 import com.example.nefrovida.data.repository.LabAnalysisRepositoryImpl
+import com.example.nefrovida.domain.repository.CovidCasesRepository
 import com.example.nefrovida.domain.repository.LabAnalysisRepository
 import dagger.Module
 import dagger.Provides
@@ -16,7 +19,26 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    val API_KEY = "un0ITY+/ggMfbxTpwIFx3A==3LQWzP6zqoJIbnDi"
+    private const val API_KEY = "un0ITY+/ggMfbxTpwIFx3A==3LQWzP6zqoJIbnDi"
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val newRequest = chain.request()
+                    .newBuilder()
+                    .addHeader("X-Api-Key", API_KEY)
+                    .build()
+
+                // Log the final URL used
+                println("🔥 URL Used: ${newRequest.url}")
+
+                chain.proceed(newRequest)
+            }
+            .build()
+    }
+
     @Provides
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
@@ -29,28 +51,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("X-Api-Key", API_KEY)
-                    .build()
-                chain.proceed(request)
-            }
-            .build()
+    fun provideCovidCasesApi(retrofit: Retrofit): CovidApi {
+        return retrofit.create(CovidApi::class.java)
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideLabAnalysisApi(retrofit: Retrofit): LaboratoryApi {
-//        return retrofit.create(LaboratoryApi::class.java)
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun provideLabAnalysisRepository(
-//        api: LaboratoryApi
-//    ): LabAnalysisRepository {
-//        return LabAnalysisRepositoryImpl(api)
-//    }
+    @Provides
+    @Singleton
+    fun provideCovidCasesRepository(
+        api: CovidApi
+    ): CovidCasesRepository {
+        return CovidCasesRepositoryImpl(api)
+    }
 }
