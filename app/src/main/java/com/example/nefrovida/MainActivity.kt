@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.nefrovida.ui.theme.NefrovidaTheme
 import com.example.nefrovida.presentation.navigation.NefrovidaNavGraph
-import com.example.nefrovida.ui.organisms.NfBottomNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
 
