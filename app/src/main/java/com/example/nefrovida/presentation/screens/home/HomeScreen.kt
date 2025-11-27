@@ -25,6 +25,8 @@ fun HomeScreen(navController: NavController,
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+            // This will be my entry point
+            
             Text(
                 text = "🚧 En construcción 🚧",
                 color = MaterialTheme.colorScheme.onSurface,

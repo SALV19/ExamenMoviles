@@ -196,23 +196,23 @@ fun LabAnalysisFilter(
                     Text("Borrar", color = Color(0xFF000000))
                 }
 
-                Button(
-                    modifier = Modifier
-                        .weight(1f),
-                    colors = ButtonDefaults.buttonColors(Color.Green),
-                    onClick = {
-                        onChange(
-                            startDate,
-                            endDate,
-                            selectedAnalysis.toList().map(),
-                            status
-                        )
-                        onClose()
-                    },
-
-                ) {
-                    Text("Buscar")
-                }
+//                Button(
+//                    modifier = Modifier
+//                        .weight(1f),
+//                    colors = ButtonDefaults.buttonColors(Color.Green),
+//                    onClick = {
+//                        onChange(
+//                            startDate,
+//                            endDate,
+//                            selectedAnalysis.toList().map(),
+//                            status
+//                        )
+//                        onClose()
+//                    },
+//
+//                ) {
+//                    Text("Buscar")
+//                }
             }
         }
     }

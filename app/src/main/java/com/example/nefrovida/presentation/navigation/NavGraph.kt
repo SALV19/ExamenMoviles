@@ -5,18 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.nefrovida.presentation.screens.agenda.AgendaScreen
-import com.example.nefrovida.presentation.screens.forum.ForumScreen
 import com.example.nefrovida.presentation.screens.home.HomeScreen
-import com.example.nefrovida.presentation.screens.labanalysis.LabAnalysisScreen
-import com.example.nefrovida.presentation.screens.laboratory.LaboratoryScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
-    object Laboratory : Screen("labs")
-    object Agenda : Screen("agenda")
-    object Forum : Screen ("forum")
-    object LabAnalysis: Screen ("labAnalysis")
 }
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -33,27 +25,22 @@ fun NefrovidaNavGraph(
             HomeScreen(navController = navController)
         }
 
-        composable( route = Screen.Laboratory.route) {
-            LaboratoryScreen(
-                navController = navController,
-                onBackClick = { navController.popBackStack() })
-        }
+//        composable(
+//            route = Screen.Detail.route,
+//            arguments = listOf(navArgument("pokemonId") { type = NavType.StringType }),
+//        ) { backStackEntry ->
+//            val pokemonId = backStackEntry.arguments?.getString("pokemonId") ?: "1"
+//            PokemonDetailScreen(
+//                pokemonId = pokemonId,
+//                onBackClick = { navController.popBackStack() },
+//            )
+//        }
 
-        composable(route = Screen.LabAnalysis.route) {
-            LabAnalysisScreen(
-                navController = navController,
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable( route = Screen.Forum.route) {
-            ForumScreen(
-                navController = navController,
-                onBackClick = { navController.popBackStack() })
-        }
-        composable(route = Screen.Agenda.route) {
-            AgendaScreen( navController = navController,
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+//        composable( route = Screen.Laboratory.route) {
+//            LaboratoryScreen(
+//                navController = navController,
+//                onBackClick = { navController.popBackStack() })
+//        }
+
     }
 }

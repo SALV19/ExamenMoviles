@@ -22,9 +22,9 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 Scaffold(
-                    bottomBar = {
-                        NfBottomNavigationBar(navController = navController)
-                    }
+//                    bottomBar = {
+//                        NfBottomNavigationBar(navController = navController)
+//                    }
                 ) { innerPadding ->
                     NefrovidaNavGraph(
                         navController = navController,

@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.nefrovida.domain.model.Analysis
 import com.example.nefrovida.domain.model.LabAnalysis
-import com.example.nefrovida.presentation.screens.labanalysis.AnalysisUIState
 import com.example.nefrovida.ui.atoms.ClickableIcon
 import com.example.nefrovida.ui.atoms.Pill
 import com.example.nefrovida.ui.atoms.Title
