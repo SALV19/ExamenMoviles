@@ -16,22 +16,4 @@ sealed class BottomNavDestination (
         label = "Inicio",
         icon = Icons.Outlined.Home,
         filledIcon = Icons.Filled.Home)
-    object Lab : BottomNavDestination(
-        route = "labs",
-        label = "Análisis",
-        icon = Icons.Outlined.Science,
-        filledIcon = Icons.Filled.Science)
-    object Forum : BottomNavDestination(
-        route = "forum",
-        label = "Foro",
-        icon = Icons.Outlined.Forum,
-        filledIcon = Icons.Filled.Forum)
-    object Agenda : BottomNavDestination(
-        route = "agenda",
-        label = "Agenda",
-        icon = Icons.Outlined.CalendarMonth,
-        filledIcon = Icons.Filled.CalendarMonth)
-    companion object {
-        val items = listOf(Home, Lab, Forum, Agenda)
-    }
 }
