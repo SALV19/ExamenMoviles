@@ -121,13 +121,6 @@ fun CovidCaseItem(case: CovidCase) {
                     )
 
                     StatBox(
-                        label = "Active",
-                        value = formatNumber(case.cases.dailyCases.entries.lastOrNull()?.value?.total ?: 0),
-                        color = Color(0xFFFFAB40),
-                        icon = "⚠️"
-                    )
-
-                    StatBox(
                         label = "New",
                         value = formatNumber(case.cases.dailyCases.entries.lastOrNull()?.value?.newCases ?: 0),
                         color = Color(0xFF4A5568),

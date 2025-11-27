@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.nefrovida.data.local.preferences.CovidPreferences
 import com.example.nefrovida.ui.organisms.CovidCaseItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,11 +33,10 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadCovidCases(country = "", date = null)
+        viewModel.loadCovidCases(date = null)
     }
 
     val countries = listOf(
-        "United States",
         "Mexico",
         "Canada",
         "Brazil",
@@ -45,6 +45,9 @@ fun HomeScreen(
         "France",
         "Germany",
         "Italy",
+        "United Kingdom",
+        "Argentina",
+        "Australia",
     )
 
     var expanded by remember { mutableStateOf(false) }
