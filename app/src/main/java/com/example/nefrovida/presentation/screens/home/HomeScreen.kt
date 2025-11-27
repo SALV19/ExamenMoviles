@@ -18,7 +18,7 @@ import com.example.nefrovida.ui.organisms.NfBottomNavigationBar
 @Composable
 fun HomeScreen(navController: NavController,
                modifier: Modifier = Modifier,
-) { //TODO: Crear HomePage
+) {
     Scaffold { _ ->
         Box(
             modifier = modifier
