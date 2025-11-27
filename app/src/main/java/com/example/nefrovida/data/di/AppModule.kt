@@ -1,14 +1,18 @@
 package com.example.nefrovida.data.di
 
+import android.content.Context
+import com.example.nefrovida.data.local.preferences.CovidPreferences
 import com.example.nefrovida.data.remote.api.CovidApi
 import com.example.nefrovida.data.remote.api.LaboratoryApi
 import com.example.nefrovida.data.repository.CovidCasesRepositoryImpl
 import com.example.nefrovida.data.repository.LabAnalysisRepositoryImpl
 import com.example.nefrovida.domain.repository.CovidCasesRepository
 import com.example.nefrovida.domain.repository.LabAnalysisRepository
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -57,9 +61,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGson(): Gson {
+        return Gson()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCovidPreferences(
+        @ApplicationContext context: Context,
+        gson: Gson
+    ): CovidPreferences {
+        return CovidPreferences(context, gson)
+    }
+
+    @Provides
+    @Singleton
     fun provideCovidCasesRepository(
-        api: CovidApi
+        api: CovidApi,
+        preferences: CovidPreferences
     ): CovidCasesRepository {
-        return CovidCasesRepositoryImpl(api)
+        return CovidCasesRepositoryImpl(api, preferences)
     }
 }

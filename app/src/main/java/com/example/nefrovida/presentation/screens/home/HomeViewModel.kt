@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    fun loadCovidCases(country: String, date: String?) {
+    fun loadCovidCases(country: String? = null, date: String? = null) {
         viewModelScope.launch {
             getCovidCases(country, date).collect { result ->
                 _uiState.update { state ->
