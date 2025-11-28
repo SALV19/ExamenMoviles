@@ -549,8 +549,31 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Loading State
+            if (uiState.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 40.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(
+                            color = Color(0xFF667eea),
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Loading data...",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+
             // Content based on mode
-            if (isComparisonMode && selectedCountry1.isNotEmpty() && selectedCountry2.isNotEmpty()) {
+            if (isComparisonMode && selectedCountry1.isNotEmpty() && selectedCountry2.isNotEmpty() && !uiState.isLoading) {
                 // Comparison Mode View
                 if (!uiState.isLoading && uiState.error == null) {
                     Text(
@@ -680,29 +703,6 @@ fun HomeScreen(
 
                     item {
                         Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
-            }
-
-            // Loading State
-            if (uiState.isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 40.dp),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(
-                            color = Color(0xFF667eea),
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Loading data...",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
-                        )
                     }
                 }
             }
