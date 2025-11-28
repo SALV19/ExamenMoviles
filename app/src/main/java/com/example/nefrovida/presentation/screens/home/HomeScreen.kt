@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.nefrovida.ui.organisms.CovidCaseItem
 import com.example.nefrovida.ui.organisms.ComparisonCard
+import com.example.nefrovida.ui.organisms.CovidBarChartList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -670,18 +671,19 @@ fun HomeScreen(
                     }
                 }
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(filteredCases) { covidCase ->
-                        CovidCaseItem(covidCase)
-                    }
-
-                    item {
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
+                (CovidBarChartList(filteredCases))
+//                LazyColumn(
+//                    modifier = Modifier.fillMaxSize(),
+//                    verticalArrangement = Arrangement.spacedBy(12.dp)
+//                ) {
+//                    items(filteredCases) { covidCase ->
+//                        CovidCaseItem(covidCase)
+//                    }
+//
+//                    item {
+//                        Spacer(modifier = Modifier.height(16.dp))
+//                    }
+//                }
             }
 
             // Loading State
@@ -729,7 +731,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = error,
+                            text = "Error retrieving information",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color(0xFFC62828)
                         )
