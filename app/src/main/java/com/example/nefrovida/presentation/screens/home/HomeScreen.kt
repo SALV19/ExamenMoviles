@@ -654,6 +654,50 @@ fun HomeScreen(
                         }
                     }
                 }
+                else {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFFFEBEE)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "⚠️ Error",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFD32F2F)
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "No Items",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color(0xFFC62828)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(
+                                onClick = { viewModel.loadCovidCases(country = "", date = null) },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF667eea)
+                                ),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Retry")
+                            }
+                        }
+                    }
+                }
 
                 if (!uiState.isLoading && uiState.error == null && filteredCases.isEmpty() && selectedDate.isNotEmpty()) {
                     Card(
@@ -729,7 +773,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = error,
+                            text = "Could not load information, try again",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color(0xFFC62828)
                         )
